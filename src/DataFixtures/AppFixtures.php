@@ -8,7 +8,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
@@ -21,7 +21,7 @@ class AppFixtures extends Fixture
      */
     private $encoder;
     
-    public function __construct(UserPasswordHasherInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder= $encoder;
     }
@@ -42,7 +42,7 @@ class AppFixtures extends Fixture
             $chrono = 1;
         
             // encoder le mot de pass utilisateur
-            $hash=$this->encoder->hashPassword($user, "password");
+            $hash=$this->encoder->encodePassword($user, "password");
             
             $user->setFirstName($faker->email)
                 ->setLastName($faker->lastName)
