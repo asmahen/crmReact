@@ -10,9 +10,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("email", message="email déjà utilisé")
  * @ApiResource
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -28,6 +31,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="l'email est obligatoire")
+     * @Assert\Email(message="le format de l'email doit être valide")
      */
     private $email;
 
@@ -40,18 +45,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="le mot de passe est obligatoire")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="le prénom est obligatoire")
+     * @Assert\length(min=3, minMessage="le prénom est trop court", max=255, maxMessage="le prénom est trop long")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read", "invoices_subresource"})
+     * @Assert\NotBlank(message="le nom est obligatoire")
+     * @Assert\length(min=3, minMessage="le nom est trop court", max=255, maxMessage="le nom est trop long")
      */
     private $lastName;
 
